@@ -14,9 +14,9 @@ import type { FC } from 'react';
 import { useCallback, useContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
-import { Logo } from '../../../components/Icons/Logo';
+import { AppContext } from '../../../App.context';
+import { Logo } from '../../../components';
 import { paths } from '../../../router/paths';
-import { ViewsContext } from '../../Views.context';
 import { AGENCIES_TITLE } from './constants';
 import { Wrapper, WrapperActions, WrapperLogo } from './styles';
 
@@ -25,7 +25,7 @@ export const Header: FC = () => {
   const routeParams = useParams();
   const navigate = useNavigate();
 
-  const { activeRealtor, isLoading, realtors } = useContext(ViewsContext);
+  const { activeRealtor, isLoading, realtors } = useContext(AppContext);
 
   const handleRealtorChange = useCallback(
     (event: SelectChangeEvent<HTMLSelectElement>) => {
@@ -52,10 +52,12 @@ export const Header: FC = () => {
           <WrapperActions>
             <LoadingButton
               className="unread-counter"
+              disableFocusRipple
+              disableRipple
               loading={isLoading}
-              variant="contained"
               size="medium"
               startIcon={<Email />}
+              variant="contained"
             >
               {activeRealtor?.unread_messages}
             </LoadingButton>

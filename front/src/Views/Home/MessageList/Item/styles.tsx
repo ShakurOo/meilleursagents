@@ -1,58 +1,51 @@
-import MUIBox, { BoxProps } from '@mui/material/Box';
 import MUIListItem, { ListItemProps } from '@mui/material/ListItem';
 import { styled } from '@mui/material/styles';
 
-import { HEADER_HEIGHT } from '../../../Layout/Header/styles';
-
 export const MAX_ITEM_HEIGHT = 141;
 
-export const Wrapper = styled(MUIBox)<BoxProps>(() => ({
-  height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-  overflow: 'auto',
-}));
+export const ListWrapper = styled(MUIListItem)<
+  ListItemProps & { isActive: boolean; read: number }
+>(({ isActive, read, theme }) => ({
+  backgroundColor: isActive ? theme.palette.grey[100] : theme.palette.common.white,
+  filter: read ? 'grayscale(1)' : 'grayscale(0)',
+  maxHeight: MAX_ITEM_HEIGHT,
 
-export const ListWrapper = styled(MUIListItem)<ListItemProps & { read: number }>(
-  ({ read, theme }) => ({
-    filter: read ? 'grayscale(1)' : 'grayscale(0)',
-    maxHeight: MAX_ITEM_HEIGHT,
+  '.item-link': {
+    color: 'inherit',
+    textDecoration: 'none',
+    width: '100%',
 
-    '.item-link': {
-      color: 'inherit',
-      textDecoration: 'none',
-      width: '100%',
+    '.item-button': {
+      padding: theme.spacing(1.5, 2),
 
-      '.item-button': {
-        padding: theme.spacing(1.5, 2),
+      '& svg': {
+        margin: theme.spacing(0.5, 0, 0, 1.5),
+        opacity: read ? 0.35 : 1,
+      },
 
-        '& svg': {
-          margin: theme.spacing(0.5, 0, 0, 1.5),
-          opacity: read ? 0.35 : 1,
-        },
+      '& .title-text': {
+        color: read ? theme.palette.grey[600] : 'inherit',
+      },
 
-        '& .title-text': {
-          color: read ? theme.palette.grey[600] : 'inherit',
-        },
+      '& .body-text': {
+        color: read ? theme.palette.grey[600] : theme.palette.common.black,
 
-        '& .body-text': {
-          color: read ? theme.palette.grey[600] : theme.palette.common.black,
+        '& > span:nth-of-type(n+2)': {
+          color: theme.palette.grey[600],
 
-          '& > span:nth-of-type(n+2)': {
-            color: theme.palette.grey[600],
-
-            '@supports (-webkit-line-clamp: 2)': {
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'initial',
-              display: '-webkit-box',
-              WebkitLineClamp: '2',
-              WebkitBoxOrient: 'vertical',
-            },
+          '@supports (-webkit-line-clamp: 2)': {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'initial',
+            display: '-webkit-box',
+            WebkitLineClamp: '2',
+            WebkitBoxOrient: 'vertical',
           },
         },
       },
     },
-  }),
-);
+  },
+}));
 
 export const ListExtraWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',

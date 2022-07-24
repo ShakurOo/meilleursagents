@@ -1,7 +1,7 @@
 import Box, { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
-import { HEADER_HEIGHT } from '../../Views/Layout/Header/styles';
+import { HEADER_HEIGHT } from '../../views/Layout/Header/styles';
 
 export const Wrapper = styled(Box)<BoxProps>(({ theme }) => ({
   alignItems: 'center',

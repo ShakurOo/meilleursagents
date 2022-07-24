@@ -1,9 +1,10 @@
-import { Dispatch, FC, ReactNode, useEffect, useState } from 'react';
+import type { FC, ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { createContext } from 'react';
-import { generatePath, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
-import { useAxios } from '../hooks/useAxios';
-import { paths } from '../router/paths';
+import { useAxios } from './hooks';
+import { paths } from './router/paths';
 
 interface Realtor {
   id: number;
@@ -18,18 +19,17 @@ const INITIAL_STATE = {
   realtors: null,
 };
 
-export interface ViewsContextProps {
+export interface AppContextProps {
   activeRealtor: Realtor | null;
   isLoading: boolean;
   realtors: Realtor[] | null;
 }
-export const ViewsContext = createContext<ViewsContextProps>(INITIAL_STATE);
+export const AppContext = createContext<AppContextProps>(INITIAL_STATE);
 
-interface ViewsProviderProps {
+interface AppProviderProps {
   children: ReactNode;
 }
-export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
-  const location = useLocation();
+export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const routeParams = useParams();
   const navigate = useNavigate();
 
@@ -82,7 +82,7 @@ export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
   }, [dataRealtors, routeParams.realtorId]);
 
   return (
-    <ViewsContext.Provider
+    <AppContext.Provider
       value={{
         activeRealtor,
         isLoading: !loaded,
@@ -90,6 +90,6 @@ export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
       }}
     >
       {children}
-    </ViewsContext.Provider>
+    </AppContext.Provider>
   );
 };

@@ -1,2 +1,2 @@
-export * from '../Views/Layout/Header';
+export * from './Icons/Logo';
 export * from './Loader';

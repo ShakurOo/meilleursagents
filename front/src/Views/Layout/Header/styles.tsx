@@ -26,6 +26,7 @@ export const WrapperActions = styled('div')(({ theme }) => ({
 
   '& > .unread-counter': {
     boxShadow: 'none',
+    pointerEvents: 'none',
   },
 }));
 

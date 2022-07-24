@@ -1,6 +1,6 @@
 import { Drafts, Mail, Phone, Sms } from '@mui/icons-material';
 
-import { Message, MessageType } from '../../typings/messages';
+import { Message, MessageType } from '../../types/messages';
 
 export const getMessageIcon = ({ read, type }: Partial<Message>) => {
   const color = read ? 'disabled' : 'primary';

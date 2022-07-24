@@ -6,15 +6,16 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { formatRelative } from 'date-fns';
-import { FC, Fragment, useContext, useEffect, useMemo, useRef } from 'react';
+import type { FC } from 'react';
+import { Fragment, memo, useContext, useEffect, useMemo, useRef } from 'react';
 import { generatePath, Link } from 'react-router-dom';
+import { areEqual } from 'react-window';
 
 import { DATE_FNS_LOCALE } from '../../../../constants';
 import { paths } from '../../../../router/paths';
-import { MessageType } from '../../../../typings/messages';
+import { MessageType } from '../../../../types/messages';
 import { capitalize } from '../../../../utils/string';
 import { MessagesContext } from '../../Messages.context';
 import { getMessageFrom, getMessageIcon } from '../../utils';
@@ -25,9 +26,8 @@ interface ItemProps {
   index: number;
   setItemSize: (index: number, size: number) => void;
 }
-export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
-  const { messages, isFullLoaded } = useContext(MessagesContext);
-  const theme = useTheme();
+export const Item: FC<ItemProps> = memo(({ index, setItemSize }) => {
+  const { activeMessage, messages, isFullLoaded } = useContext(MessagesContext);
   const itemRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -50,6 +50,7 @@ export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
   }
 
   const { body, contact, date, id, read, type, subject } = messages[index];
+  const isActive = activeMessage?.id === id;
 
   const caption = useMemo(() => {
     switch (type) {
@@ -87,7 +88,12 @@ export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
 
   return (
     <Box ref={itemRef}>
-      <ListWrapper disablePadding id={id.toString()} read={read ? 1 : 0}>
+      <ListWrapper
+        disablePadding
+        id={id.toString()}
+        isActive={isActive}
+        read={read ? 1 : 0}
+      >
         <Link
           className="item-link"
           to={generatePath(paths.MESSAGES_ID, { messageId: id.toString() })}
@@ -134,4 +140,6 @@ export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
       <Divider variant="inset" />
     </Box>
   );
-};
+}, areEqual);
+
+Item.displayName = 'MessageItem';

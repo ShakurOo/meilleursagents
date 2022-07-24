@@ -1,4 +1,5 @@
-import { FC, LegacyRef, useCallback, useContext, useRef } from 'react';
+import type { FC } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { VariableSizeList as List } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -12,7 +13,8 @@ import { Wrapper } from './styles';
 export const MessageList: FC = () => {
   const listRef = useRef<List | null>(null);
   const sizeMap = useRef<{ [key: number]: number } | null>(null);
-  const { isLoading, isFullLoaded, messages, setPage } = useContext(MessagesContext);
+  const { activeMessage, isLoading, isFullLoaded, messages, setPage } =
+    useContext(MessagesContext);
 
   const handleLoadMoreItems = useCallback(() => {
     if (isLoading) {
@@ -32,6 +34,15 @@ export const MessageList: FC = () => {
     listRef.current?.resetAfterIndex(0);
     sizeMap.current = { ...sizeMap.current, [index]: size };
   }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const activeMessageIndex = messages.findIndex(({ id }) => id === activeMessage?.id);
+      setTimeout(() => {
+        listRef.current?.scrollToItem(activeMessageIndex, 'start');
+      }, 0);
+    }
+  }, [isLoading]);
 
   if (isLoading) {
     return <Loader />;

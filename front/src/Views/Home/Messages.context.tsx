@@ -2,11 +2,9 @@ import { Dispatch, FC, ReactNode, useEffect, useState } from 'react';
 import { createContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
-import { useAxios } from '../../hooks/useAxios';
+import { useAxios, usePrevious } from '../../hooks';
 import { paths } from '../../router/paths';
-// import { generatePath, useNavigate, useParams } from 'react-router-dom';
-import type { Message } from '../../typings/messages';
-// import { paths } from '../router/paths';
+import type { Message } from '../../types/messages';
 import { getMessageAsReadPayload } from './utils';
 
 const INITIAL_MESSAGES_PAGE = 1;
@@ -25,7 +23,7 @@ export interface MessagesContextProps {
   messages: Message[];
   isFullLoaded: boolean;
   isLoading: boolean;
-  setPage: Dispatch<number>;
+  setPage: Dispatch<(pages: number) => number>;
 }
 export const MessagesContext = createContext<MessagesContextProps>(INITIAL_STATE);
 
@@ -34,18 +32,22 @@ interface MessagesProviderProps {
 }
 export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
   const routeParams = useParams();
+  const previousRouteParams = usePrevious(routeParams);
+
   const navigate = useNavigate();
 
   const [activeMessage, setActiveMessage] = useState<Message | null>(
     INITIAL_STATE.activeMessage,
   );
+
+  const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>(INITIAL_STATE.messages);
   const [page, setPage] = useState(INITIAL_MESSAGES_PAGE);
 
   // Fetch messages
   const {
     data: dataMessages,
-    loaded,
+    loaded: dataMessagesLoaded,
     setLoaded,
   } = useAxios<Message[]>(
     `realtors/${routeParams.realtorId}/messages/?${new URLSearchParams({
@@ -60,7 +62,7 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
   );
 
   // Update message
-  const { data: dataUpdatedMessage, loaded: isMessageUpdated } = useAxios<Message>(
+  const { data: dataUpdatedMessage } = useAxios<Message>(
     `realtors/${routeParams.realtorId}/messages/${activeMessage?.id}`,
     'PATCH',
     {
@@ -69,14 +71,24 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
     },
   );
 
+  /**
+   * We populating internal messages states
+   */
   useEffect(() => {
     if (dataMessages) {
       setMessages((currentMessages) => [...currentMessages, ...dataMessages]);
     }
   }, [dataMessages]);
 
+  /**
+   * We resetting everything when realtor changes
+   */
   useEffect(() => {
-    if (routeParams.realtorId && (messages.length || page !== INITIAL_MESSAGES_PAGE)) {
+    if (
+      routeParams.realtorId &&
+      routeParams.realtorId !== previousRouteParams?.realtorId &&
+      (messages.length || page !== INITIAL_MESSAGES_PAGE)
+    ) {
       setActiveMessage(null);
       setLoaded(false);
       setMessages(INITIAL_STATE.messages);
@@ -84,6 +96,9 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
     }
   }, [routeParams.realtorId]);
 
+  /**
+   * We retrieving message data from url
+   */
   useEffect(() => {
     if (routeParams?.messageId) {
       const activeMessage = messages.find(
@@ -100,15 +115,22 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
           return;
         }
 
+        setIsLoading((currentIsLoading) => currentIsLoading || true);
+
+        // [Otherwise] we attempting to load next pages sucessively
         setPage((currentPage) => currentPage + 1);
         return;
       }
 
       // [Otherwise] we uses the message corresponding as active message
       setActiveMessage(activeMessage);
+      setIsLoading(false);
     }
   }, [dataMessages, routeParams]);
 
+  /**
+   * We updating internal messages states to refresh the view
+   */
   useEffect(() => {
     if (dataUpdatedMessage) {
       setActiveMessage(dataUpdatedMessage);
@@ -126,7 +148,7 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
         activeMessage,
         messages,
         isFullLoaded: !dataMessages?.length,
-        isLoading: !loaded,
+        isLoading: isLoading || !dataMessagesLoaded,
         setPage,
       }}
     >

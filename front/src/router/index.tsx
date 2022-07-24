@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Home } from '../Views/Home';
-import { Layout } from '../Views/Layout';
+import { Home } from '../views/Home';
+import { Layout } from '../views/Layout';
 import { paths } from './paths';
 
 export const LIST_PATH = 'realtors';
