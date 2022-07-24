@@ -6,7 +6,10 @@ const MAIN_API_DOMAIN = '//localhost:8080';
 export const useAxios = <D = never[]>(
   url: string,
   method: Method,
-  payload: Record<string, any>,
+  opts?: {
+    payload?: Record<string, any>;
+    skip?: boolean;
+  },
 ) => {
   const [data, setData] = useState<D | null>(null);
   const [error, setError] = useState('');
@@ -18,22 +21,35 @@ export const useAxios = <D = never[]>(
   };
 
   useEffect(() => {
+    if (opts?.skip) {
+      return;
+    }
+
     (async () => {
       try {
         const response = await axios.request({
-          data: payload,
+          ...(method !== 'GET'
+            ? { ...(opts?.payload && { data: opts.payload }) }
+            : { ...(opts?.payload && { params: new URLSearchParams(opts.payload) }) }),
           signal: controllerRef.current.signal,
           method,
           url: `${MAIN_API_DOMAIN}/${url}`,
         });
-        setData(response.data);
+
+        // Fake delay
+        setTimeout(() => {
+          setData(response.data);
+        }, 250);
       } catch (error: any) {
         setError(error.message);
       } finally {
-        setLoaded(true);
+        // Fake delay
+        setTimeout(() => {
+          setLoaded(true);
+        }, 250);
       }
     })();
-  }, []);
+  }, [url, opts?.skip]);
 
-  return { cancel, data, error, loaded };
+  return { cancel, data, error, loaded, setLoaded };
 };

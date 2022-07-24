@@ -1,0 +1,138 @@
+import { Drafts, Mail, Phone, Sms } from '@mui/icons-material';
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import { formatRelative } from 'date-fns';
+import { FC, Fragment, useContext, useEffect, useMemo, useRef } from 'react';
+import { generatePath, Link } from 'react-router-dom';
+
+import { DATE_FNS_LOCALE } from '../../../../constants';
+import { paths } from '../../../../router/paths';
+import { MessageType } from '../../../../typings/messages';
+import { capitalize } from '../../../../utils/string';
+import { MessagesContext } from '../../Messages.context';
+import { END_OF_MESSAGES_TEXT, MESSAGE_TITLE_SUFFIX } from './constants';
+import { ListWrapper, ListExtraWrapper, TitleWrapper } from './styles';
+
+interface ItemProps {
+  index: number;
+  setItemSize: (index: number, size: number) => void;
+}
+export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
+  const { messages, isFullLoaded } = useContext(MessagesContext);
+  const itemRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (itemRef.current) {
+      setItemSize(index, itemRef.current.clientHeight);
+    }
+  }, [itemRef]);
+
+  // Extra item to show loading icon or "End of items" text
+  if (!messages[index]) {
+    return (
+      <ListExtraWrapper ref={itemRef}>
+        {!isFullLoaded ? (
+          <CircularProgress size={32} />
+        ) : (
+          <Typography>{END_OF_MESSAGES_TEXT}</Typography>
+        )}
+      </ListExtraWrapper>
+    );
+  }
+
+  const { body, contact, date, id, read, type, subject } = messages[index];
+
+  const caption = useMemo(() => {
+    switch (type) {
+      case MessageType.EMAIL:
+        return `Email ${MESSAGE_TITLE_SUFFIX}`;
+      case MessageType.PHONE:
+        return `Message ${MESSAGE_TITLE_SUFFIX}`;
+      case MessageType.SMS:
+        return `SMS ${MESSAGE_TITLE_SUFFIX}`;
+    }
+  }, [type]);
+
+  const from = useMemo(
+    () =>
+      contact.firstname ? `${contact.firstname} ${contact.lastname}` : contact.phone,
+    [contact],
+  );
+
+  const labelizedDate = useMemo(() => {
+    return capitalize(
+      formatRelative(new Date(date), new Date(), {
+        locale: DATE_FNS_LOCALE,
+        weekStartsOn: 1,
+      }),
+    );
+  }, [date]);
+
+  const Icon = useMemo(() => {
+    switch (type) {
+      case MessageType.EMAIL:
+        return read ? <Drafts /> : <Mail color="primary" />;
+      case MessageType.PHONE:
+        return <Phone color="primary" />;
+      case MessageType.SMS:
+        return <Sms color="primary" />;
+    }
+  }, [read, type]);
+
+  return (
+    <Box ref={itemRef}>
+      <ListWrapper disablePadding id={id.toString()} read={read ? 1 : 0}>
+        <Link
+          className="item-link"
+          to={generatePath(paths.MESSAGES_ID, { messageId: id.toString() })}
+        >
+          <ListItemButton alignItems="flex-start" className="item-button">
+            <ListItemIcon>{Icon}</ListItemIcon>
+            <ListItemText
+              classes={{
+                primary: 'title-text',
+                secondary: 'body-text',
+              }}
+              primary={
+                <TitleWrapper>
+                  <Typography component="span" variant="h6">
+                    {from}
+                  </Typography>
+
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    {...(!read && { color: 'primary' })}
+                  >
+                    {labelizedDate}
+                  </Typography>
+                </TitleWrapper>
+              }
+              secondary={
+                <Fragment>
+                  <Typography component="span">{caption}</Typography>
+
+                  {type !== MessageType.PHONE && (
+                    <Typography component="span">{body}</Typography>
+                  )}
+
+                  {type === MessageType.PHONE && (
+                    <Typography component="span">{subject}</Typography>
+                  )}
+                </Fragment>
+              }
+            />
+          </ListItemButton>
+        </Link>
+      </ListWrapper>
+      <Divider variant="inset" />
+    </Box>
+  );
+};

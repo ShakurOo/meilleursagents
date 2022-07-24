@@ -34,10 +34,7 @@ export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
   const routeParams = useParams();
   const navigate = useNavigate();
 
-  const { data: dataRealtors, loaded } = useAxios<Realtor[]>('realtors/', 'GET', {
-    page: 1,
-    page_size: 10,
-  });
+  const { data: dataRealtors, loaded } = useAxios<Realtor[]>('realtors/', 'GET');
 
   const [activeRealtor, setActiveRealtor] = useState<Realtor | null>(null);
 

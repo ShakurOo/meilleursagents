@@ -1,4 +1,5 @@
 import { Email } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Container,
@@ -9,7 +10,8 @@ import {
   Toolbar,
   useTheme,
 } from '@mui/material';
-import { FC, useCallback, useContext } from 'react';
+import type { ChangeEvent, FC } from 'react';
+import { useCallback, useContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { Logo } from '../../../components/Icons/Logo';
@@ -23,10 +25,10 @@ export const Header: FC = () => {
   const routeParams = useParams();
   const navigate = useNavigate();
 
-  const { activeRealtor, realtors } = useContext(ViewsContext);
+  const { activeRealtor, isLoading, realtors } = useContext(ViewsContext);
 
   const handleRealtorChange = useCallback(
-    (event) => {
+    (event: ChangeEvent<HTMLSelectElement>) => {
       const selectedId = event.target.value;
       const newRouteParams = {
         ...routeParams,
@@ -41,36 +43,43 @@ export const Header: FC = () => {
 
   return (
     <Wrapper>
-      <Container maxWidth="xl">
+      <Container maxWidth="false">
         <Toolbar disableGutters>
           <WrapperLogo>
             <Logo fill={theme.palette.secondary.main} />
           </WrapperLogo>
 
           <WrapperActions>
-            <Button
+            <LoadingButton
               className="unread-counter"
+              loading={isLoading}
               variant="contained"
               size="medium"
               startIcon={<Email />}
             >
               {activeRealtor?.unread_messages}
-            </Button>
+            </LoadingButton>
 
             <FormControl className="realtors-select" fullWidth>
-              <InputLabel>{AGENCIES_TITLE}</InputLabel>
-              <Select
-                value={activeRealtor?.id || ''}
-                label={AGENCIES_TITLE}
-                onChange={handleRealtorChange}
-                size="small"
-              >
-                {realtors?.map(({ id, name }) => (
-                  <MenuItem key={id} value={id}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
+              {isLoading ? (
+                <LoadingButton loading={true} variant="outlined" disabled>...</LoadingButton>
+              ) : (
+                <>
+                  <InputLabel>{AGENCIES_TITLE}</InputLabel>
+                  <Select
+                    value={activeRealtor?.id || ''}
+                    label={AGENCIES_TITLE}
+                    onChange={handleRealtorChange}
+                    size="small"
+                  >
+                    {realtors?.map(({ id, name }) => (
+                      <MenuItem key={id} value={id}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </>
+              )}
             </FormControl>
           </WrapperActions>
         </Toolbar>

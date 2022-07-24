@@ -7,7 +7,6 @@ import { HEADER_HEIGHT } from '../Layout/Header/styles';
 const DRAWER_WIDTH = 500;
 
 export const Drawer = styled(MUIDrawer)<DrawerProps>(() => ({
-  //   height: `calc(100vh - ${HEADER_HEIGHT}px)`,
   display: 'flex',
   flexShrink: 0,
   width: DRAWER_WIDTH,
@@ -20,6 +19,5 @@ export const Drawer = styled(MUIDrawer)<DrawerProps>(() => ({
 }));
 
 export const Wrapper = styled(MUIBox)<BoxProps>(() => ({
-  //   height: `calc(100vh - ${HEADER_HEIGHT}px)`,
   display: 'flex',
 }));
