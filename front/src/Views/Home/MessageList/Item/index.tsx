@@ -1,4 +1,3 @@
-import { Drafts, Mail, Phone, Sms } from '@mui/icons-material';
 import {
   Box,
   CircularProgress,
@@ -17,8 +16,9 @@ import { paths } from '../../../../router/paths';
 import { MessageType } from '../../../../typings/messages';
 import { capitalize } from '../../../../utils/string';
 import { MessagesContext } from '../../Messages.context';
+import { getMessageFrom, getMessageIcon } from '../../utils';
 import { END_OF_MESSAGES_TEXT, MESSAGE_TITLE_SUFFIX } from './constants';
-import { ListWrapper, ListExtraWrapper, TitleWrapper } from './styles';
+import { ListExtraWrapper, ListWrapper, TitleWrapper } from './styles';
 
 interface ItemProps {
   index: number;
@@ -60,31 +60,20 @@ export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
     }
   }, [type]);
 
-  const from = useMemo(
+  const from = useMemo(() => getMessageFrom(contact), [contact]);
+
+  const labelizedDate: string = useMemo(
     () =>
-      contact.firstname ? `${contact.firstname} ${contact.lastname}` : contact.phone,
-    [contact],
+      capitalize(
+        formatRelative(new Date(date), new Date(), {
+          locale: DATE_FNS_LOCALE,
+          weekStartsOn: 1,
+        }),
+      ),
+    [date],
   );
 
-  const labelizedDate = useMemo(() => {
-    return capitalize(
-      formatRelative(new Date(date), new Date(), {
-        locale: DATE_FNS_LOCALE,
-        weekStartsOn: 1,
-      }),
-    );
-  }, [date]);
-
-  const Icon = useMemo(() => {
-    switch (type) {
-      case MessageType.EMAIL:
-        return read ? <Drafts /> : <Mail color="primary" />;
-      case MessageType.PHONE:
-        return <Phone color="primary" />;
-      case MessageType.SMS:
-        return <Sms color="primary" />;
-    }
-  }, [read, type]);
+  const Icon = useMemo(() => getMessageIcon(type, read), [read, type]);
 
   return (
     <Box ref={itemRef}>

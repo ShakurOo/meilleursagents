@@ -20,7 +20,8 @@ export const WrapperActions = styled('div')(({ theme }) => ({
 
   '& > .realtors-select': {
     marginLeft: theme.spacing(2),
-    width: 100,
+    maxWidth: 200,
+    minWidth: 150,
   },
 
   '& > .unread-counter': {

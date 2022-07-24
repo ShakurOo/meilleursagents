@@ -1,36 +1,97 @@
-import { Typography } from '@mui/material';
-import type { FC } from 'react';
+import { Inbox } from '@mui/icons-material';
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { format } from 'date-fns';
+import { FC, useContext } from 'react';
 
-import { Wrapper } from './styles';
+import { Loader } from '../../../components';
+import { MessagesContext } from '../Messages.context';
+import { getMessageFrom, getMessageIcon } from '../utils';
+import { EMAIL_LABEL, PHONE_LABEL } from './constants';
+import { ExtraWrapper, TitleWrapper, WhiteWrapper, Wrapper } from './styles';
 
 export const MessageDetails: FC = () => {
+  const theme = useTheme();
+  const { activeMessage, isLoading } = useContext(MessagesContext);
+
+  if (isLoading || !activeMessage) {
+    return (
+      <Wrapper component="main">
+        <ExtraWrapper>{isLoading ? <Loader /> : <Inbox />};</ExtraWrapper>;
+      </Wrapper>
+    );
+  }
+
+  const { body, contact, date, id, read, type, subject } = activeMessage;
+  const Icon = getMessageIcon(
+    type,
+    read,
+    read ? theme.palette.grey['300'] : theme.palette.primary.main,
+  );
+
+  const from = getMessageFrom(contact);
+  const labelizedDate = `Le ${format(new Date(date), 'dd/MM/yyyy à hh:mm')}`;
+
   return (
     <Wrapper component="main">
-      <Typography paragraph>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-        incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent
-        elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus
-        in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id
-        interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-        adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis.
-        Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis
-        imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras
-        tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis
-        at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-        sapien faucibus et molestie ac.
-      </Typography>
-      <Typography paragraph>
-        Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget
-        nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim neque
-        volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus
-        sit amet volutpat consequat mauris. Elementum eu facilisis sed odio morbi. Euismod
-        lacinia at quis risus sed vulputate odio. Morbi tincidunt ornare massa eget
-        egestas purus viverra accumsan in. In hendrerit gravida rutrum quisque non tellus
-        orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant morbi tristique
-        senectus et. Adipiscing elit duis tristique sollicitudin nibh sit. Ornare aenean
-        euismod elementum nisi quis eleifend. Commodo viverra maecenas accumsan lacus vel
-        facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-      </Typography>
+      <WhiteWrapper>
+        <TitleWrapper>
+          <Box>{Icon}</Box>
+          <Typography className="title-from" component="span" variant="h6">
+            {from}
+          </Typography>
+        </TitleWrapper>
+
+        {(contact.email || contact.phone) && (
+          <List>
+            {contact.email && (
+              <ListItem className="head-list">
+                <ListItemText primary={EMAIL_LABEL} />
+
+                <ListItem
+                  component="a"
+                  key={contact.email}
+                  href={`mailto:${from}@${contact.email}`}
+                >
+                  {contact.email}
+                </ListItem>
+              </ListItem>
+            )}
+            {contact.phone && (
+              <ListItem className="head-list">
+                <ListItemText primary={PHONE_LABEL} />
+
+                <ListItem
+                  component="a"
+                  key={contact.phone}
+                  href={`tel://${contact.phone}`}
+                >
+                  {contact.phone}
+                </ListItem>
+              </ListItem>
+            )}
+          </List>
+        )}
+      </WhiteWrapper>
+
+      <WhiteWrapper>
+        <Typography className="title-from" component="span" variant="h6">
+          {from}
+        </Typography>
+        <Typography className="date">{labelizedDate}</Typography>
+
+        <Paper className="body-wrapper" elevation={0}>
+          <Typography paragraph>{activeMessage?.body}</Typography>
+        </Paper>
+      </WhiteWrapper>
     </Wrapper>
   );
 };

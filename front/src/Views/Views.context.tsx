@@ -1,6 +1,6 @@
 import { Dispatch, FC, ReactNode, useEffect, useState } from 'react';
 import { createContext } from 'react';
-import { generatePath, useNavigate, useParams } from 'react-router-dom';
+import { generatePath, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { useAxios } from '../hooks/useAxios';
 import { paths } from '../router/paths';
@@ -16,14 +16,12 @@ const INITIAL_STATE = {
   activeRealtor: null,
   isLoading: false,
   realtors: null,
-  setActiveRealtor: () => null,
 };
 
 export interface ViewsContextProps {
   activeRealtor: Realtor | null;
   isLoading: boolean;
   realtors: Realtor[] | null;
-  setActiveRealtor: Dispatch<Realtor | null>;
 }
 export const ViewsContext = createContext<ViewsContextProps>(INITIAL_STATE);
 
@@ -31,6 +29,7 @@ interface ViewsProviderProps {
   children: ReactNode;
 }
 export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
+  const location = useLocation();
   const routeParams = useParams();
   const navigate = useNavigate();
 
@@ -57,16 +56,27 @@ export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
 
   /**
    * If user try to access to /realtors without providing realtorId,
-   * we pushing it by selecting the first realtor id of the list
+   * [or]
+   * If user put unknown realtorId in the url,
+   * [Then]
+   * We selecting the first realtor of the list by default
    **/
   useEffect(() => {
-    if (dataRealtors?.length && !routeParams.realtorId) {
+    if (dataRealtors?.length) {
+      const activeRealtor = dataRealtors.find(
+        ({ id }) => id === Number(routeParams.realtorId),
+      );
+
       const newRouteParams = {
         ...routeParams,
-        realtorId: dataRealtors.at(0)!.id.toString(),
+        realtorId: activeRealtor?.id.toString() || dataRealtors.at(0)!.id.toString(),
       };
 
-      const newPath = generatePath(paths.LIST_ID, newRouteParams);
+      const newPath = generatePath(
+        `${paths.LIST_ID}${'messageId' in newRouteParams ? '/' + paths.MESSAGES_ID : ''}`,
+        newRouteParams,
+      );
+
       navigate(newPath, { replace: true });
     }
   }, [dataRealtors, routeParams.realtorId]);
@@ -77,7 +87,6 @@ export const ViewsProvider: FC<ViewsProviderProps> = ({ children }) => {
         activeRealtor,
         isLoading: !loaded,
         realtors: dataRealtors,
-        setActiveRealtor,
       }}
     >
       {children}

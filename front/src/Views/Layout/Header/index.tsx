@@ -1,16 +1,16 @@
 import { Email } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
-  Button,
   Container,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Toolbar,
   useTheme,
 } from '@mui/material';
-import type { ChangeEvent, FC } from 'react';
+import type { FC } from 'react';
 import { useCallback, useContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
@@ -28,11 +28,11 @@ export const Header: FC = () => {
   const { activeRealtor, isLoading, realtors } = useContext(ViewsContext);
 
   const handleRealtorChange = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
+    (event: SelectChangeEvent<HTMLSelectElement>) => {
       const selectedId = event.target.value;
       const newRouteParams = {
         ...routeParams,
-        realtorId: realtors?.find(({ id }) => id === selectedId)?.id.toString(),
+        realtorId: realtors?.find(({ id }) => id === Number(selectedId))?.id.toString(),
       };
 
       const newPath = generatePath(paths.LIST_ID, newRouteParams);
@@ -43,7 +43,7 @@ export const Header: FC = () => {
 
   return (
     <Wrapper>
-      <Container maxWidth="false">
+      <Container maxWidth={false}>
         <Toolbar disableGutters>
           <WrapperLogo>
             <Logo fill={theme.palette.secondary.main} />
@@ -62,12 +62,14 @@ export const Header: FC = () => {
 
             <FormControl className="realtors-select" fullWidth>
               {isLoading ? (
-                <LoadingButton loading={true} variant="outlined" disabled>...</LoadingButton>
+                <LoadingButton loading={true} variant="outlined" disabled>
+                  ...
+                </LoadingButton>
               ) : (
                 <>
                   <InputLabel>{AGENCIES_TITLE}</InputLabel>
                   <Select
-                    value={activeRealtor?.id || ''}
+                    value={activeRealtor?.id?.toString() || ''}
                     label={AGENCIES_TITLE}
                     onChange={handleRealtorChange}
                     size="small"

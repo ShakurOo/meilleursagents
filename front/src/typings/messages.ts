@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 export enum MessageType {
   EMAIL = 'email',
   PHONE = 'phone',

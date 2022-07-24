@@ -39,14 +39,14 @@ export const useAxios = <D = never[]>(
         // Fake delay
         setTimeout(() => {
           setData(response.data);
-        }, 250);
+        }, 100);
       } catch (error: any) {
         setError(error.message);
       } finally {
         // Fake delay
         setTimeout(() => {
           setLoaded(true);
-        }, 250);
+        }, 100);
       }
     })();
   }, [url, opts?.skip]);
