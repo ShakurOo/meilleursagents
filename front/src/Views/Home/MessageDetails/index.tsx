@@ -19,31 +19,26 @@ import { EMAIL_LABEL, PHONE_LABEL } from './constants';
 import { ExtraWrapper, TitleWrapper, WhiteWrapper, Wrapper } from './styles';
 
 export const MessageDetails: FC = () => {
-  const theme = useTheme();
   const { activeMessage, isLoading } = useContext(MessagesContext);
 
   if (isLoading || !activeMessage) {
     return (
       <Wrapper component="main">
-        <ExtraWrapper>{isLoading ? <Loader /> : <Inbox />};</ExtraWrapper>;
+        <ExtraWrapper>{isLoading ? <Loader /> : <Inbox />}</ExtraWrapper>
       </Wrapper>
     );
   }
 
-  const { body, contact, date, id, read, type, subject } = activeMessage;
-  const Icon = getMessageIcon(
-    type,
-    read,
-    read ? theme.palette.grey['300'] : theme.palette.primary.main,
-  );
+  const { body, contact, date, read, type } = activeMessage;
 
-  const from = getMessageFrom(contact);
+  const Icon = getMessageIcon({ read, type });
+  const from = getMessageFrom({ contact, type });
   const labelizedDate = `Le ${format(new Date(date), 'dd/MM/yyyy à hh:mm')}`;
 
   return (
     <Wrapper component="main">
       <WhiteWrapper>
-        <TitleWrapper>
+        <TitleWrapper read={read}>
           <Box>{Icon}</Box>
           <Typography className="title-from" component="span" variant="h6">
             {from}
@@ -89,7 +84,7 @@ export const MessageDetails: FC = () => {
         <Typography className="date">{labelizedDate}</Typography>
 
         <Paper className="body-wrapper" elevation={0}>
-          <Typography paragraph>{activeMessage?.body}</Typography>
+          <Typography paragraph>{body}</Typography>
         </Paper>
       </WhiteWrapper>
     </Wrapper>

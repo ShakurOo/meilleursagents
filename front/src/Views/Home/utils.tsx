@@ -1,15 +1,12 @@
 import { Drafts, Mail, Phone, Sms } from '@mui/icons-material';
 
-import { MessageType } from '../../typings/messages';
+import { Message, MessageType } from '../../typings/messages';
 
-export const getMessageIcon = (
-  type: MessageType,
-  read: boolean,
-  color: any = 'primary',
-) => {
+export const getMessageIcon = ({ read, type }: Partial<Message>) => {
+  const color = read ? 'disabled' : 'primary';
   switch (type) {
     case MessageType.EMAIL:
-      return read ? <Drafts /> : <Mail color={color} />;
+      return read ? <Drafts color={color} /> : <Mail color={color} />;
     case MessageType.PHONE:
       return <Phone color={color} />;
     case MessageType.SMS:
@@ -17,5 +14,10 @@ export const getMessageIcon = (
   }
 };
 
-export const getMessageFrom = (contact: any): string =>
-  contact.firstname ? `${contact.firstname} ${contact.lastname}` : contact.phone;
+export const getMessageFrom = ({ contact }: Partial<Message>): string =>
+  contact?.firstname ? `${contact.firstname} ${contact.lastname}` : contact?.phone || '';
+
+export const getMessageAsReadPayload = (message: Message | null): Message | {} => {
+  const { id, ...restMessage } = message || {};
+  return { ...restMessage, ...(restMessage && { read: true }) };
+};

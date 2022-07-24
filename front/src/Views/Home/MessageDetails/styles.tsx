@@ -18,19 +18,22 @@ export const ExtraWrapper = styled('div')(({ theme }) => ({
   },
 }));
 
-export const TitleWrapper = styled(MUIBox)<BoxProps>(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
+export const TitleWrapper = styled(MUIBox)<BoxProps & { read: boolean }>(
+  ({ read, theme }) => ({
+    alignItems: 'center',
+    display: 'flex',
 
-  '& > div': {
-    width: TITLE_SVG_HEIGHT,
+    '& > div': {
+      width: TITLE_SVG_HEIGHT,
 
-    '& > svg': {
-      marginTop: theme.spacing(0.5),
-      fontSize: 32,
+      '& > svg': {
+        fill: !read ? theme.palette.grey[800] : theme.palette.grey[300],
+        marginTop: theme.spacing(0.5),
+        fontSize: 32,
+      },
     },
-  },
-}));
+  }),
+);
 
 export const WhiteWrapper = styled(MUIBox)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.common.white,

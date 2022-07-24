@@ -6,6 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { formatRelative } from 'date-fns';
 import { FC, Fragment, useContext, useEffect, useMemo, useRef } from 'react';
@@ -26,6 +27,7 @@ interface ItemProps {
 }
 export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
   const { messages, isFullLoaded } = useContext(MessagesContext);
+  const theme = useTheme();
   const itemRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -60,7 +62,15 @@ export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
     }
   }, [type]);
 
-  const from = useMemo(() => getMessageFrom(contact), [contact]);
+  const from = useMemo(
+    () => (
+      <Box alignItems="center" display="flex">
+        {getMessageFrom({ contact, type })}
+        {type === MessageType.PHONE && <Typography>({contact.phone})</Typography>}
+      </Box>
+    ),
+    [contact, type],
+  );
 
   const labelizedDate: string = useMemo(
     () =>
@@ -73,7 +83,7 @@ export const Item: FC<ItemProps> = ({ index, setItemSize }) => {
     [date],
   );
 
-  const Icon = useMemo(() => getMessageIcon(type, read), [read, type]);
+  const Icon = useMemo(() => getMessageIcon({ read, type }), [read, type]);
 
   return (
     <Box ref={itemRef}>

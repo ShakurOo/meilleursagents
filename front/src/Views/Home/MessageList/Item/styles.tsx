@@ -70,5 +70,9 @@ export const TitleWrapper = styled('span')(({ theme }) => ({
   '& > span:first-of-type': {
     flex: '1 auto',
     fontWeight: theme.typography.fontWeightBold,
+
+    '&  p': {
+      marginLeft: theme.spacing(0.75),
+    },
   },
 }));

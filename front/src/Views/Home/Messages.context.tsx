@@ -7,6 +7,7 @@ import { paths } from '../../router/paths';
 // import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import type { Message } from '../../typings/messages';
 // import { paths } from '../router/paths';
+import { getMessageAsReadPayload } from './utils';
 
 const INITIAL_MESSAGES_PAGE = 1;
 const INITIAL_MESSAGES_PAGE_SIZE = 10;
@@ -41,6 +42,7 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>(INITIAL_STATE.messages);
   const [page, setPage] = useState(INITIAL_MESSAGES_PAGE);
 
+  // Fetch messages
   const {
     data: dataMessages,
     loaded,
@@ -54,6 +56,16 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
     'GET',
     {
       skip: !routeParams.realtorId,
+    },
+  );
+
+  // Update message
+  const { data: dataUpdatedMessage, loaded: isMessageUpdated } = useAxios<Message>(
+    `realtors/${routeParams.realtorId}/messages/${activeMessage?.id}`,
+    'PATCH',
+    {
+      payload: getMessageAsReadPayload(activeMessage),
+      skip: !activeMessage?.id || activeMessage.read,
     },
   );
 
@@ -92,10 +104,21 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
         return;
       }
 
-      // [Then] we uses the message corresponding as active message
+      // [Otherwise] we uses the message corresponding as active message
       setActiveMessage(activeMessage);
     }
   }, [dataMessages, routeParams]);
+
+  useEffect(() => {
+    if (dataUpdatedMessage) {
+      setActiveMessage(dataUpdatedMessage);
+      setMessages((currentMessages) =>
+        currentMessages.map((message) =>
+          message.id === dataUpdatedMessage.id ? dataUpdatedMessage : message,
+        ),
+      );
+    }
+  }, [dataUpdatedMessage]);
 
   return (
     <MessagesContext.Provider
