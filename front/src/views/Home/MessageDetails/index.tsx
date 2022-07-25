@@ -1,24 +1,31 @@
-import { Inbox } from '@mui/icons-material';
+import { ArrowBack, Inbox } from '@mui/icons-material';
 import {
   Box,
-  Divider,
+  Button,
   List,
   ListItem,
   ListItemText,
   Paper,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { format } from 'date-fns';
 import { FC, useContext } from 'react';
+import { generatePath } from 'react-router-dom';
 
+import { AppContext } from '../../../App.context';
 import { Loader } from '../../../components';
+import { paths } from '../../../router/paths';
 import { MessagesContext } from '../Messages.context';
 import { getMessageFrom, getMessageIcon } from '../utils';
-import { EMAIL_LABEL, PHONE_LABEL } from './constants';
-import { ExtraWrapper, TitleWrapper, WhiteWrapper, Wrapper } from './styles';
+import { BACK_TO_LIST_LABEL, EMAIL_LABEL, PHONE_LABEL } from './constants';
+import { BackButton, ExtraWrapper, TitleWrapper, WhiteWrapper, Wrapper } from './styles';
 
 export const MessageDetails: FC = () => {
+  const theme = useTheme();
+  const isSmallViewport = useMediaQuery(theme.breakpoints.down('md'));
+  const { activeRealtor } = useContext(AppContext);
   const { activeMessage, isLoading } = useContext(MessagesContext);
 
   if (isLoading || !activeMessage) {
@@ -36,7 +43,17 @@ export const MessageDetails: FC = () => {
   const labelizedDate = `Le ${format(new Date(date), 'dd/MM/yyyy à hh:mm')}`;
 
   return (
-    <Wrapper component="main">
+    <Wrapper>
+      {isSmallViewport && (
+        <BackButton
+          to={generatePath(paths.LIST_ID, { realtorId: activeRealtor?.id.toString() })}
+        >
+          <Button startIcon={<ArrowBack />} variant="outlined">
+            {BACK_TO_LIST_LABEL}
+          </Button>
+        </BackButton>
+      )}
+
       <WhiteWrapper>
         <TitleWrapper read={read}>
           <Box>{Icon}</Box>

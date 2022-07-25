@@ -1,9 +1,18 @@
 import MUIBox, { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import { Link, LinkProps } from 'react-router-dom';
 
 import { HEADER_HEIGHT } from '../../Layout/Header/styles';
 
 const TITLE_SVG_HEIGHT = 50;
+
+export const BackButton = styled(Link)<LinkProps>(({ theme }) => ({
+  color: theme.palette.grey[900],
+  display: 'block',
+  marginBottom: theme.spacing(2.5),
+  marginTop: theme.spacing(1),
+  textDecoration: 'none',
+}));
 
 export const ExtraWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',

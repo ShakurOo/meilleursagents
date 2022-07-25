@@ -91,7 +91,7 @@ export const Item: FC<ItemProps> = memo(({ index, setItemSize }) => {
       <ListWrapper
         disablePadding
         id={id.toString()}
-        isActive={isActive}
+        isactive={isActive ? 1 : 0}
         read={read ? 1 : 0}
       >
         <Link

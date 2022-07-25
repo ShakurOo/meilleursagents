@@ -4,9 +4,9 @@ import { styled } from '@mui/material/styles';
 export const MAX_ITEM_HEIGHT = 141;
 
 export const ListWrapper = styled(MUIListItem)<
-  ListItemProps & { isActive: boolean; read: number }
->(({ isActive, read, theme }) => ({
-  backgroundColor: isActive ? theme.palette.grey[100] : theme.palette.common.white,
+  ListItemProps & { isactive: number; read: number }
+>(({ isactive, read, theme }) => ({
+  backgroundColor: isactive ? theme.palette.grey[100] : theme.palette.common.white,
   filter: read ? 'grayscale(1)' : 'grayscale(0)',
   maxHeight: MAX_ITEM_HEIGHT,
 
