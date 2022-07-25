@@ -30,7 +30,7 @@ export const MessageDetails: FC = () => {
 
   if (isLoading || !activeMessage) {
     return (
-      <Wrapper component="main">
+      <Wrapper>
         <ExtraWrapper>{isLoading ? <Loader /> : <Inbox />}</ExtraWrapper>
       </Wrapper>
     );

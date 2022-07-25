@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import type { FC } from 'react';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -6,9 +7,10 @@ import InfiniteLoader from 'react-window-infinite-loader';
 
 import { Loader } from '../../../components';
 import { MessagesContext } from '../Messages.context';
+import { EMPTY_MESSAGE_LABEL } from './constants';
 import { Item } from './Item';
 import { MAX_ITEM_HEIGHT } from './Item/styles';
-import { Wrapper } from './styles';
+import { ExtraWrapper, Wrapper } from './styles';
 
 export const MessageList: FC = () => {
   const listRef = useRef<List | null>(null);
@@ -46,6 +48,12 @@ export const MessageList: FC = () => {
 
   if (isLoading) {
     return <Loader />;
+  } else if (!messages.length) {
+    return (
+      <ExtraWrapper>
+        <Typography color="disabled">{EMPTY_MESSAGE_LABEL}</Typography>
+      </ExtraWrapper>
+    );
   }
 
   return (
