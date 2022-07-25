@@ -42,7 +42,7 @@ export const Header: FC = () => {
   );
 
   return (
-    <Wrapper>
+    <Wrapper data-testid="main-header">
       <Container maxWidth={false}>
         <Toolbar disableGutters>
           <WrapperLogo>
@@ -71,7 +71,7 @@ export const Header: FC = () => {
                 <>
                   <InputLabel>{AGENCIES_TITLE}</InputLabel>
                   <Select
-                    value={activeRealtor?.id?.toString() || ''}
+                    value={activeRealtor?.id?.toString() as any || ''}
                     label={AGENCIES_TITLE}
                     onChange={handleRealtorChange}
                     size="small"

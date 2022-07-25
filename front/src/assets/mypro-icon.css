@@ -1,13 +1,15 @@
-
 @font-face {
-  font-family: "mypro-icon";
+  font-family: 'mypro-icon';
   font-weight: normal;
   font-style: normal;
-  src: url("mypro-icon.eot");
-  src: url("mypro-icon.eot?#iefix") format("embedded-opentype"), url("mypro-icon.woff") format("woff"), url("mypro-icon.ttf") format("truetype"), url("mypro-icon.svg#mypro-icon") format("svg"); }
+  src: url('mypro-icon.eot');
+  src: url('mypro-icon.eot?#iefix') format('embedded-opentype'),
+    url('mypro-icon.woff') format('woff'), url('mypro-icon.ttf') format('truetype'),
+    url('mypro-icon.svg#mypro-icon') format('svg');
+}
 
-.mypro-icon[class^="mypro-icon-"],
-.mypro-icon[class*=" mypro-icon-"] {
+.mypro-icon[class^='mypro-icon-'],
+.mypro-icon[class*=' mypro-icon-'] {
   display: inline-block;
   font-family: 'mypro-icon';
   font-size: 1rem;
@@ -18,76 +20,101 @@
   line-height: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  vertical-align: baseline; }
+  vertical-align: baseline;
+}
 
 .mypro-icon-agent:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-arrow-down:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-arrow-left:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-arrow-right:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-arrow-up:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-bill:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-calculator:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-cross:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-exit:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-feedback:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-folder:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-forward:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-help:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-home:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-inbox:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-mail:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-past-sale:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-payment:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-phone:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-plus:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-settings:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-sms:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-stats:before {
-  content: ""; }
+  content: '';
+}
 
 .mypro-icon-vitrine:before {
-  content: ""; }
+  content: '';
+}
