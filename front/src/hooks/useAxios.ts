@@ -1,7 +1,7 @@
 import axios, { Method } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-const MAIN_API_DOMAIN = '//localhost:8080';
+import { API_DOMAIN } from '../constants';
 
 export const useAxios = <D = never[]>(
   url: string,
@@ -33,20 +33,14 @@ export const useAxios = <D = never[]>(
             : { ...(opts?.payload && { params: new URLSearchParams(opts.payload) }) }),
           signal: controllerRef.current.signal,
           method,
-          url: `${MAIN_API_DOMAIN}/${url}`,
+          url: `${API_DOMAIN}/${url}`,
         });
 
-        // Fake delay
-        setTimeout(() => {
-          setData(response.data);
-        }, 100);
+        setData(response.data);
       } catch (error: any) {
         setError(error.message);
       } finally {
-        // Fake delay
-        setTimeout(() => {
-          setLoaded(true);
-        }, 100);
+        setLoaded(true);
       }
     })();
   }, [url, opts?.skip]);

@@ -22,7 +22,7 @@ export const ExtraWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   textAlign: 'center',
 
-  '& > svg': {
+  '& > span > svg': {
     fontSize: 72,
   },
 }));
@@ -35,7 +35,7 @@ export const TitleWrapper = styled(MUIBox)<BoxProps & { read: boolean }>(
     '& > div': {
       width: TITLE_SVG_HEIGHT,
 
-      '& > svg': {
+      '& > span > svg': {
         fill: !read ? theme.palette.grey[800] : theme.palette.grey[300],
         marginTop: theme.spacing(0.5),
         fontSize: 32,

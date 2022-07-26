@@ -16,7 +16,7 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { AppContext } from '../../../App.context';
 import { Logo } from '../../../components';
-import { paths } from '../../../router/paths';
+import { Paths } from '../../../router/paths';
 import { AGENCIES_TITLE } from './constants';
 import { Wrapper, WrapperActions, WrapperLogo } from './styles';
 
@@ -35,7 +35,7 @@ export const Header: FC = () => {
         realtorId: realtors?.find(({ id }) => id === Number(selectedId))?.id.toString(),
       };
 
-      const newPath = generatePath(paths.LIST_ID, newRouteParams);
+      const newPath = generatePath(Paths.LIST_ID, newRouteParams);
       navigate(newPath);
     },
     [realtors],
@@ -71,10 +71,11 @@ export const Header: FC = () => {
                 <>
                   <InputLabel>{AGENCIES_TITLE}</InputLabel>
                   <Select
-                    value={activeRealtor?.id?.toString() as any || ''}
+                    data-testid="realtors-select"
                     label={AGENCIES_TITLE}
                     onChange={handleRealtorChange}
                     size="small"
+                    value={(activeRealtor?.id?.toString() as any) || ''}
                   >
                     {realtors?.map(({ id, name }) => (
                       <MenuItem key={id} value={id}>

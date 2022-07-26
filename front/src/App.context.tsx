@@ -4,7 +4,7 @@ import { createContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { useAxios } from './hooks';
-import { paths } from './router/paths';
+import { Paths } from './router/paths';
 
 interface Realtor {
   id: number;
@@ -69,11 +69,11 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
 
       const newRouteParams = {
         ...routeParams,
-        realtorId: activeRealtor?.id.toString() || dataRealtors.at(0)!.id.toString(),
+        realtorId: activeRealtor?.id.toString() || dataRealtors[0]!.id.toString(),
       };
 
       const newPath = generatePath(
-        `${paths.LIST_ID}${'messageId' in newRouteParams ? '/' + paths.MESSAGES_ID : ''}`,
+        `${Paths.LIST_ID}${'messageId' in newRouteParams ? '/' + Paths.MESSAGES_ID : ''}`,
         newRouteParams,
       );
 

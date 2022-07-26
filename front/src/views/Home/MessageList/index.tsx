@@ -57,7 +57,7 @@ export const MessageList: FC = () => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper data-testid="list-view">
       <InfiniteLoader
         isItemLoaded={isItemLoaded}
         itemCount={itemCount}

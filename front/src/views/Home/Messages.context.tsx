@@ -3,7 +3,7 @@ import { createContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { useAxios, usePrevious } from '../../hooks';
-import { paths } from '../../router/paths';
+import { Paths } from '../../router/paths';
 import type { Message } from '../../types/messages';
 import { getMessageAsReadPayload } from './utils';
 
@@ -110,8 +110,12 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
         // [If] there is no more messages provided by API ...
         if (Array.isArray(dataMessages) && !dataMessages.length) {
           // [Then] we redirects the user to the listing view
-          const newPath = generatePath(paths.LIST_ID, routeParams);
-          navigate(newPath, { replace: true });
+          setIsLoading(false);
+
+          setTimeout(() => {
+            const newPath = generatePath(Paths.LIST_ID, routeParams);
+            navigate(newPath, { replace: true });
+          }, 0);
           return;
         }
 

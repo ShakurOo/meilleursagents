@@ -14,7 +14,7 @@ import { generatePath, Link } from 'react-router-dom';
 import { areEqual } from 'react-window';
 
 import { DATE_FNS_LOCALE } from '../../../../constants';
-import { paths } from '../../../../router/paths';
+import { Paths } from '../../../../router/paths';
 import { MessageType } from '../../../../types/messages';
 import { capitalize } from '../../../../utils/string';
 import { MessagesContext } from '../../Messages.context';
@@ -84,11 +84,19 @@ export const Item: FC<ItemProps> = memo(({ index, setItemSize }) => {
     [date],
   );
 
-  const Icon = useMemo(() => getMessageIcon({ read, type }), [read, type]);
+  const Icon = useMemo(
+    () => (
+      <Box component="span" data-testid={read ? 'icon-disabled' : 'icon-enabled'}>
+        {getMessageIcon({ read, type })}
+      </Box>
+    ),
+    [read, type],
+  );
 
   return (
     <Box ref={itemRef}>
       <ListWrapper
+        data-testid={`item-${read ? 'read' : 'unread'}`}
         disablePadding
         id={id.toString()}
         isactive={isActive ? 1 : 0}
@@ -96,7 +104,8 @@ export const Item: FC<ItemProps> = memo(({ index, setItemSize }) => {
       >
         <Link
           className="item-link"
-          to={generatePath(paths.MESSAGES_ID, { messageId: id.toString() })}
+          data-testid="item-link"
+          to={generatePath(Paths.MESSAGES_ID, { messageId: id.toString() })}
         >
           <ListItemButton alignItems="flex-start" className="item-button">
             <ListItemIcon>{Icon}</ListItemIcon>

@@ -16,7 +16,7 @@ import { generatePath } from 'react-router-dom';
 
 import { AppContext } from '../../../App.context';
 import { Loader } from '../../../components';
-import { paths } from '../../../router/paths';
+import { Paths } from '../../../router/paths';
 import { MessagesContext } from '../Messages.context';
 import { getMessageFrom, getMessageIcon } from '../utils';
 import { BACK_TO_LIST_LABEL, EMAIL_LABEL, PHONE_LABEL } from './constants';
@@ -31,14 +31,26 @@ export const MessageDetails: FC = () => {
   if (isLoading || !activeMessage) {
     return (
       <Wrapper>
-        <ExtraWrapper>{isLoading ? <Loader /> : <Inbox />}</ExtraWrapper>
+        <ExtraWrapper>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <Box component="span" data-testid="icon-empty">
+              <Inbox />
+            </Box>
+          )}
+        </ExtraWrapper>
       </Wrapper>
     );
   }
 
   const { body, contact, date, read, type } = activeMessage;
 
-  const Icon = getMessageIcon({ read, type });
+  const Icon = (
+    <Box component="span" data-testid={read ? 'icon-disabled' : 'icon-enabled'}>
+      {getMessageIcon({ read, type })}
+    </Box>
+  );
   const from = getMessageFrom({ contact, type });
   const labelizedDate = `Le ${format(new Date(date), 'dd/MM/yyyy à hh:mm')}`;
 
@@ -46,7 +58,7 @@ export const MessageDetails: FC = () => {
     <Wrapper>
       {isSmallViewport && (
         <BackButton
-          to={generatePath(paths.LIST_ID, { realtorId: activeRealtor?.id.toString() })}
+          to={generatePath(Paths.LIST_ID, { realtorId: activeRealtor?.id.toString() })}
         >
           <Button startIcon={<ArrowBack />} variant="outlined">
             {BACK_TO_LIST_LABEL}

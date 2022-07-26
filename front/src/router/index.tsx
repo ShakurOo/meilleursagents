@@ -3,17 +3,14 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { Home } from '../views/Home';
 import { Layout } from '../views/Layout';
-import { paths } from './paths';
-
-export const LIST_PATH = 'realtors';
-export const MESSAGES_PATH = 'messages';
+import { Paths } from './paths';
 
 export const AppRoutes: FC = () => (
   <Routes>
     <Route path="/" element={<Layout />}>
-      <Route path={paths.LIST}>
+      <Route path={Paths.LIST}>
         <Route path=":realtorId" element={<Home />}>
-          <Route path={paths.MESSAGES}>
+          <Route path={Paths.MESSAGES}>
             <Route path=":messageId" element={<Home />} />
           </Route>
         </Route>

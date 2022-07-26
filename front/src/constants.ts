@@ -1,4 +1,6 @@
-import { fr } from 'date-fns/esm/locale';
+import { fr } from 'date-fns/locale';
+
+export const API_DOMAIN = '//localhost:8080';
 
 const DATE_FNS_FORMAT_RELATIVE_LOCALE = {
   lastWeek: 'eeee',
