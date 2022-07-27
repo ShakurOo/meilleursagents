@@ -15,7 +15,7 @@ import { areEqual } from 'react-window';
 
 import { DATE_FNS_LOCALE } from '../../../../constants';
 import { Paths } from '../../../../router/paths';
-import { MessageType } from '../../../../types/messages';
+import { MessageType } from '../../../../types/message';
 import { capitalize } from '../../../../utils/string';
 import { MessagesContext } from '../../Messages.context';
 import { getMessageFrom, getMessageIcon } from '../../utils';

@@ -4,7 +4,7 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { useAxios, usePrevious } from '../../hooks';
 import { Paths } from '../../router/paths';
-import type { Message } from '../../types/messages';
+import type { Message } from '../../types/message';
 import { getMessageAsReadPayload } from './utils';
 
 const INITIAL_MESSAGES_PAGE = 1;

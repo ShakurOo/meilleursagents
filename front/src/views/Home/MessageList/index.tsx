@@ -68,6 +68,7 @@ export const MessageList: FC = () => {
           <AutoSizer>
             {({ width, height }) => (
               <List
+                className="list"
                 height={height}
                 estimatedItemSize={141}
                 itemCount={itemCount}

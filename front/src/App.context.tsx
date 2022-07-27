@@ -5,13 +5,7 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { useAxios } from './hooks';
 import { Paths } from './router/paths';
-
-interface Realtor {
-  id: number;
-  logo: string;
-  name: string;
-  unread_messages: number;
-}
+import type { Realtor } from './types/realtor';
 
 const INITIAL_STATE = {
   activeRealtor: null,

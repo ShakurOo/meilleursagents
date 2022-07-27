@@ -58,6 +58,7 @@ export const MessageDetails: FC = () => {
     <Wrapper>
       {isSmallViewport && (
         <BackButton
+          data-testid="back-button"
           to={generatePath(Paths.LIST_ID, { realtorId: activeRealtor?.id.toString() })}
         >
           <Button startIcon={<ArrowBack />} variant="outlined">

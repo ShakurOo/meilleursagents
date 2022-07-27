@@ -48,6 +48,20 @@ module.exports = {
         'jest/globals': true, // enable Jest global variables.
       },
     },
+    {
+      files: ['./cypress/**/*.cy.ts'],
+      extends: ['plugin:cypress/recommended'],
+      plugins: ['cypress'],
+      rules: {
+        'cypress/no-force': 'warn',
+        'cypress/assertion-before-screenshot': 'warn',
+        'cypress/require-data-selectors': 'warn',
+        'cypress/no-pause': 'error',
+      },
+      env: {
+        'cypress/globals': true, // enable Cypress global variables.
+      },
+    },
   ],
   env: {
     browser: true,

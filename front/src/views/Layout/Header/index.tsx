@@ -54,38 +54,42 @@ export const Header: FC = () => {
               className="unread-counter"
               disableFocusRipple
               disableRipple
+              disabled={!isLoading && !activeRealtor}
               loading={isLoading}
               size="medium"
               startIcon={<Email />}
               variant="contained"
             >
-              {activeRealtor?.unread_messages}
+              {activeRealtor?.unread_messages || 0}
             </LoadingButton>
 
-            <FormControl className="realtors-select" fullWidth>
-              {isLoading ? (
-                <LoadingButton loading={true} variant="outlined" disabled>
-                  ...
-                </LoadingButton>
-              ) : (
-                <>
-                  <InputLabel>{AGENCIES_TITLE}</InputLabel>
-                  <Select
-                    data-testid="realtors-select"
-                    label={AGENCIES_TITLE}
-                    onChange={handleRealtorChange}
-                    size="small"
-                    value={(activeRealtor?.id?.toString() as any) || ''}
-                  >
-                    {realtors?.map(({ id, name }) => (
-                      <MenuItem key={id} value={id}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </>
-              )}
-            </FormControl>
+            {(isLoading || activeRealtor) && (
+              <FormControl className="realtors-select" fullWidth>
+                {isLoading ? (
+                  <LoadingButton loading={true} variant="outlined" disabled>
+                    ...
+                  </LoadingButton>
+                ) : (
+                  <>
+                    <InputLabel>{AGENCIES_TITLE}</InputLabel>
+                    <Select
+                      data-testid="realtors-select"
+                      disabled={!isLoading && !activeRealtor}
+                      label={AGENCIES_TITLE}
+                      onChange={handleRealtorChange}
+                      size="small"
+                      value={(activeRealtor?.id?.toString() as any) || ''}
+                    >
+                      {realtors?.map(({ id, name }) => (
+                        <MenuItem key={id} value={id}>
+                          {name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                )}
+              </FormControl>
+            )}
           </WrapperActions>
         </Toolbar>
       </Container>

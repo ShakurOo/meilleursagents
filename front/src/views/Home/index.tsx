@@ -24,13 +24,11 @@ export const Home: FC = () => {
     <Wrapper>
       <MessagesProvider>
         {showList && (
-          <Drawer
-            data-testid="list-view-wrapper"
-            islistview={isListView ? 1 : 0}
-            variant="permanent"
-          >
-            <MessageList />
-          </Drawer>
+          <Box data-testid="list-view-wrapper" component="aside">
+            <Drawer variant="permanent">
+              <MessageList />
+            </Drawer>
+          </Box>
         )}
 
         {showDetails && (
