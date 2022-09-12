@@ -1,10 +1,12 @@
-import { Dispatch, FC, ReactNode, useEffect, useState } from 'react';
+import { Dispatch, FC, ReactNode, useContext, useEffect, useState } from 'react';
 import { createContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
+import { AppContext } from '../../App.context';
 import { useAxios, usePrevious } from '../../hooks';
 import { Paths } from '../../router/paths';
 import type { Message } from '../../types/message';
+import { Realtor } from '../../types/realtor';
 import { getMessageAsReadPayload } from './utils';
 
 const INITIAL_MESSAGES_PAGE = 1;
@@ -31,9 +33,10 @@ interface MessagesProviderProps {
   children: ReactNode;
 }
 export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
+  const { setActiveRealtor } = useContext(AppContext);
+
   const routeParams = useParams();
   const previousRouteParams = usePrevious(routeParams);
-
   const navigate = useNavigate();
 
   const [activeMessage, setActiveMessage] = useState<Message | null>(
@@ -133,7 +136,7 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
   }, [dataMessages, routeParams]);
 
   /**
-   * We updating internal messages states to refresh the view
+   * We updating internal messages states to refresh the view and decrement unread messages counter
    */
   useEffect(() => {
     if (dataUpdatedMessage) {
@@ -143,6 +146,14 @@ export const MessagesProvider: FC<MessagesProviderProps> = ({ children }) => {
           message.id === dataUpdatedMessage.id ? dataUpdatedMessage : message,
         ),
       );
+
+      setActiveRealtor?.((currentActiveRealtor: Realtor) => ({
+        ...currentActiveRealtor,
+        unread_messages:
+          currentActiveRealtor?.unread_messages > 1
+            ? currentActiveRealtor?.unread_messages - 1
+            : 0,
+      }));
     }
   }, [dataUpdatedMessage]);
 

@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { createContext } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ export interface AppContextProps {
   activeRealtor: Realtor | null;
   isLoading: boolean;
   realtors: Realtor[] | null;
+  setActiveRealtor?: Dispatch<SetStateAction<Realtor>>;
 }
 export const AppContext = createContext<AppContextProps>(INITIAL_STATE);
 
@@ -81,6 +82,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         activeRealtor,
         isLoading: !loaded,
         realtors: dataRealtors,
+        setActiveRealtor,
       }}
     >
       {children}
